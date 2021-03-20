@@ -1,0 +1,25 @@
+{
+  "name": "big-data-analysis",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Julio L. Muller",
+  "main": "src/index.js",
+  "scripts": {
+    "postinstall": "node -e \"require('fs').existsSync('.env') || require('fs').copyFileSync('.env.example', '.env')\"",
+    "start": "sucrase-node ."
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "envfile": "^6.14.0",
+    "mongodb": "^3.6.5",
+    "pg": "^8.5.1",
+    "prompts": "^2.4.0"
+  },
+  "devDependencies": {
+    "@lacussoft/eslint-config": "^1.0.1",
+    "eslint": "^7.22.0",
+    "sucrase": "^3.17.1"
+  }
+}
