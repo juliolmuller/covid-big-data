@@ -52,3 +52,11 @@ COPY covid_cases(
 ) FROM 'C:\path\to\project\dataset\casos-full.csv'
   DELIMITER ','
   CSV HEADER;
+
+COPY (
+  SELECT
+	  ARRAY_TO_JSON(ARRAY_AGG(ROW_TO_JSON(tbl)))
+	FROM
+	  (SELECT * FROM covid_cases)
+	AAS tbl
+) TO 'C:\path\to\project\dataset\casos-full.json';
