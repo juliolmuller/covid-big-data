@@ -1,9 +1,6 @@
 import { readFileSync } from 'fs'
 import path from 'path'
 import { Client } from 'pg'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 const connection = {
   host: process.env.DB_PG_HOST,

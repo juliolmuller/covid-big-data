@@ -1,3 +1,4 @@
+import './config'
 import colors from 'colors'
 import pgBenchmark from './benchmarks/postgres'
 import mongoBenchmark from './benchmarks/mongo'

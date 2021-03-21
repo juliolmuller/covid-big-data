@@ -1,9 +1,6 @@
 import { MongoClient } from 'mongodb'
-import path from 'path'
 import csv from 'csvtojson'
-import dotenv from 'dotenv'
-
-dotenv.config()
+import path from 'path'
 
 const connection = {
   host: process.env.DB_MONGO_HOST,
