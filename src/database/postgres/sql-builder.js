@@ -1,5 +1,5 @@
 
-const TABLE_NAME = 'covid_cases'
+const TABLE_NAME = process.env.DB_PG_TABLE
 
 // Transformar { estado: cidade } em SQL para cláusula WHERE
 function getPlacesClosure(places) {
