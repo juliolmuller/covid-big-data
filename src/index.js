@@ -1,26 +1,14 @@
-import mongo from './database/mongo'
-import postgres from './database/postgres'
+import pgBenchmark from './benchmarks/postgres'
+import mongoBenchmark from './benchmarks/mongo'
 
-mongo.getConnection().then(async (client) => {
-  try {
-    const dbs = await client.db().admin().listDatabases()
+async function main() {
+  console.log('Iniciando benchmark do PostgreSQL...')
+  await pgBenchmark.run()
+  console.log('Benchmark do PostgreSQL finalizado! \n')
 
-    console.log(dbs)
-  } catch (error) {
-    console.error(error)
-  } finally {
-    client.close()
-  }
-})
+  console.log('Iniciando benchmark do MongoDB...')
+  await mongoBenchmark.run()
+  console.log('Benchmark do MongoDB finalizado! \n')
+}
 
-postgres.getConnection().then(async (client) => {
-  try {
-    const result = await client.query('SELECT NOW()')
-
-    console.log(result)
-  } catch (error) {
-    console.error(error)
-  } finally {
-    client.end()
-  }
-})
+main()
