@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs'
+import path from 'path'
 import { Client } from 'pg'
 import dotenv from 'dotenv'
 
@@ -11,6 +13,35 @@ const connection = {
   password: process.env.DB_PG_PASSWORD,
 }
 
+export async function loadDataset() {
+  const SQL_COMMANDS_DELIMITER = ';'
+  const DATASET_FILE_NAME = 'casos-full.csv'
+  const { database, ...rootConnection } = connection
+  const rootClient = new Client(rootConnection)
+  const dbClient = new Client(connection)
+  const datasetFolder = path.resolve(__dirname, '..', '..', '..', 'dataset')
+  const scriptFile = path.resolve(datasetFolder, 'script-pg.sql')
+  const datasetFile = path.resolve(datasetFolder, DATASET_FILE_NAME)
+  const rawSql = readFileSync(scriptFile, { encoding: 'utf8', flag: 'r' })
+  const [sqlDropDatabse, sqlCreateDatabase, ...sqlCommands] = rawSql
+    .replace(`C:\\path\\to\\project\\dataset\\${DATASET_FILE_NAME}`, datasetFile)
+    .split(SQL_COMMANDS_DELIMITER)
+
+  try {
+    await rootClient.connect()
+    await rootClient.query(sqlDropDatabse)
+    await rootClient.query(sqlCreateDatabase)
+
+    await dbClient.connect()
+    await dbClient.query(sqlCommands.join(SQL_COMMANDS_DELIMITER))
+  } catch (error) {
+    console.error(error)
+  } finally {
+    rootClient.end()
+    dbClient.end()
+  }
+}
+
 export async function getConnection() {
   const client = new Client(connection)
 
@@ -19,4 +50,7 @@ export async function getConnection() {
   return client
 }
 
-export default { getConnection }
+export default {
+  loadDataset,
+  getConnection,
+}
