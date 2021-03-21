@@ -1,14 +1,23 @@
+import colors from 'colors'
 import pgBenchmark from './benchmarks/postgres'
 import mongoBenchmark from './benchmarks/mongo'
 
-async function main() {
-  console.log('Iniciando benchmark do PostgreSQL...')
-  await pgBenchmark.run()
-  console.log('Benchmark do PostgreSQL finalizado! \n')
+function printStart(msg) {
+  console.log(' ', colors.cyan(msg))
+}
 
-  console.log('Iniciando benchmark do MongoDB...')
+function printEnd(msg) {
+  console.log(' ', colors.bgCyan(msg))
+}
+
+async function main() {
+  printStart('Iniciando benchmark do PostgreSQL...')
+  await pgBenchmark.run()
+  printEnd('Benchmark do PostgreSQL finalizado!')
+
+  printStart('Iniciando benchmark do MongoDB...')
   await mongoBenchmark.run()
-  console.log('Benchmark do MongoDB finalizado! \n')
+  printEnd('Benchmark do MongoDB finalizado!')
 }
 
 main()
