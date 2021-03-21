@@ -10,24 +10,24 @@ CREATE DATABASE big_data WITH
   CONNECTION LIMIT = -1;
 
 CREATE TABLE covid_cases(
-	city VARCHAR,
-	city_ibge_code INTEGER,
-	date DATE,
-	epidemiological_week INTEGER,
-	estimated_population INTEGER,
-	estimated_population_2019 INTEGER,
-	is_last BOOLEAN,
-	is_repeated BOOLEAN,
-	last_available_confirmed INTEGER,
-	last_available_confirmed_per_100k_inhabitants DECIMAL,
-	last_available_date DATE,
-	last_available_death_rate DECIMAL,
-	last_available_deaths INTEGER,
-	order_for_place INTEGER,
-	place_type VARCHAR,
-	state CHAR(2),
-	new_confirmed INTEGER,
-	new_deaths INTEGER
+  city VARCHAR,
+  city_ibge_code INTEGER,
+  date DATE,
+  epidemiological_week INTEGER,
+  estimated_population INTEGER,
+  estimated_population_2019 INTEGER,
+  is_last BOOLEAN,
+  is_repeated BOOLEAN,
+  last_available_confirmed INTEGER,
+  last_available_confirmed_per_100k_inhabitants DECIMAL,
+  last_available_date DATE,
+  last_available_death_rate DECIMAL,
+  last_available_deaths INTEGER,
+  order_for_place INTEGER,
+  place_type VARCHAR,
+  state CHAR(2),
+  new_confirmed INTEGER,
+  new_deaths INTEGER
 );
 
 COPY covid_cases(
@@ -53,10 +53,10 @@ COPY covid_cases(
   DELIMITER ','
   CSV HEADER;
 
-COPY (
-  SELECT
-	  ARRAY_TO_JSON(ARRAY_AGG(ROW_TO_JSON(tbl)))
-	FROM
-	  (SELECT * FROM covid_cases)
-	AAS tbl
-) TO 'C:\path\to\project\dataset\casos-full.json';
+-- COPY (
+--   SELECT
+--     ARRAY_TO_JSON(ARRAY_AGG(ROW_TO_JSON(tbl)))
+--   FROM
+--     (SELECT * FROM covid_cases)
+--   AAS tbl
+-- ) TO 'C:\path\to\project\dataset\casos-full.json';
