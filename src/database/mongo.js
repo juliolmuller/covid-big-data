@@ -1,22 +1,49 @@
 import { MongoClient } from 'mongodb'
+import path from 'path'
+import csv from 'csvtojson'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
-const host = process.env.DB_MONGO_HOST
-const port = process.env.DB_MONGO_PORT
-const database = process.env.DB_MONGO_DATABASE
-const username = process.env.DB_MONGO_USERNAME
-const password = process.env.DB_MONGO_PASSWORD
-const credentials = username ? `${username}:${password}@` : ''
-const url = `mongodb://${credentials}${host}:${port}/${database}`
+const connection = {
+  host: process.env.DB_MONGO_HOST,
+  port: process.env.DB_MONGO_PORT,
+  database: process.env.DB_MONGO_DATABASE,
+  username: process.env.DB_MONGO_USERNAME,
+  password: process.env.DB_MONGO_PASSWORD,
+  asURL() {
+    const credentials = this.username ? `${this.username}:${this.password}@` : ''
+
+    return `mongodb://${credentials}${this.host}:${this.port}/${this.database}`
+  },
+}
+
+export async function loadDataset() {
+  const client = new MongoClient(connection.asURL())
+  const datasetFolder = path.resolve(__dirname, '..', '..', 'dataset')
+  const datasetFile = path.resolve(datasetFolder, 'casos-full.csv')
+  const dataset = await csv().fromFile(datasetFile)
+
+  try {
+    await client.connect()
+    await client.db().dropDatabase()
+    await client.db().collection('covid_cases').insertMany(dataset)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    client.close()
+  }
+}
 
 export async function getConnection() {
-  const client = new MongoClient(url)
+  const client = new MongoClient(connection.asURL())
 
   await client.connect()
 
   return client
 }
 
-export default { getConnection }
+export default {
+  loadDataset,
+  getConnection,
+}
