@@ -14,7 +14,7 @@ export async function loadDataset() {
   const { database, ...rootConnection } = connection
   const rootClient = new Client(rootConnection)
   const dbClient = new Client(connection)
-  const projectRoot = path.resolve(__dirname, '..', '..', '..')
+  const projectRoot = path.resolve(__dirname, '..', '..')
   const datasetFile = path.resolve(projectRoot, process.env.DATASET_FILE)
   const scriptFile = path.resolve(projectRoot, process.env.SQL_SCRIPTS_FILE)
   const rawSql = readFileSync(scriptFile, { encoding: 'utf8', flag: 'r' })

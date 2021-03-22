@@ -3,8 +3,8 @@ import colors from 'colors'
 import prompts from 'prompts'
 import postgres from './database/postgres'
 import mongo from './database/mongo'
-import pgBenchmark from './benchmarks/postgres'
-import mongoBenchmark from './benchmarks/mongo'
+import runPostgresBenchmarks from './benchmarks/postgres'
+import runMongoBenchmarks from './benchmarks/mongo'
 
 function printStart(msg) {
   console.log(' ', colors.cyan(msg))
@@ -26,15 +26,15 @@ async function configMongo() {
   printEnd('MongoDB carregado!')
 }
 
-async function runPostgresBenchmark() {
+async function execPostgresBenchmarks() {
   printStart('Iniciando benchmark do PostgreSQL...')
-  await pgBenchmark.run()
+  await runPostgresBenchmarks()
   printEnd('Benchmark do PostgreSQL finalizado!')
 }
 
-async function runMongoBenchmark() {
+async function execMongoBenchmarks() {
   printStart('Iniciando benchmark do MongoDB...')
-  await mongoBenchmark.run()
+  await runMongoBenchmarks()
   printEnd('Benchmark do MongoDB finalizado!')
 }
 
@@ -69,11 +69,11 @@ async function runModules() {
       break
 
     case 3:
-      await runPostgresBenchmark()
+      await execPostgresBenchmarks()
       break
 
     case 4:
-      await runMongoBenchmark()
+      await execMongoBenchmarks()
       break
 
     default:

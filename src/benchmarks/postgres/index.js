@@ -1,5 +1,5 @@
-import { getConnection } from '../database/postgres'
-import * as queries from '../database/postgres/queries'
+import { getConnection } from '../../database/postgres'
+import * as queries from './queries'
 
 async function displayBenchmark(description, queryPromise) {
   const DESCRIPTION_LENGTH = 60
@@ -18,7 +18,7 @@ async function displayBenchmark(description, queryPromise) {
   }
 }
 
-async function run() {
+async function runBenchmarks() {
   const client = await getConnection()
 
   try {
@@ -66,4 +66,4 @@ async function run() {
   }
 }
 
-export default { run }
+export default runBenchmarks

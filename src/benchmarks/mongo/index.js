@@ -1,6 +1,6 @@
-import { getConnection } from '../database/mongo'
+import { getConnection } from '../../database/mongo'
 
-async function run() {
+async function runBenchmarks() {
   const client = await getConnection()
 
   try {
@@ -14,4 +14,4 @@ async function run() {
   }
 }
 
-export default { run }
+export default runBenchmarks
