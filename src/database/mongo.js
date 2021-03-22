@@ -16,7 +16,7 @@ const connection = {
 }
 
 export async function loadDataset() {
-  const client = new MongoClient(connection.asURL())
+  const client = new MongoClient(connection.asURL(), { useUnifiedTopology: true })
   const projectRoot = path.resolve(__dirname, '..', '..')
   const datasetFile = path.resolve(projectRoot, process.env.DATASET_FILE)
   const dataset = await csv().fromFile(datasetFile)
@@ -35,7 +35,7 @@ export async function loadDataset() {
 }
 
 export async function getConnection() {
-  const client = new MongoClient(connection.asURL())
+  const client = new MongoClient(connection.asURL(), { useUnifiedTopology: true })
 
   await client.connect()
 
