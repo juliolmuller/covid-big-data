@@ -18,7 +18,7 @@ export async function loadDataset() {
   const datasetFile = path.resolve(projectRoot, process.env.DATASET_FILE)
   const scriptFile = path.resolve(projectRoot, process.env.SQL_SCRIPTS_FILE)
   const rawSql = readFileSync(scriptFile, { encoding: 'utf8', flag: 'r' })
-  const [sqlDropDatabase, sqlCreateDatabase, sqlDropTable, ...sqlCommands] = rawSql
+  const [sqlDropDatabase, sqlCreateDatabase, ...sqlCommands] = rawSql
     .replace(/<absolute path to DATASET_FILE>/g, datasetFile)
     .replace(/<DB_PG_DATABASE>/g, process.env.DB_PG_DATABASE)
     .replace(/<DB_PG_TABLE>/g, process.env.DB_PG_TABLE)
@@ -28,7 +28,6 @@ export async function loadDataset() {
     await rootClient.connect()
     await rootClient.query(sqlDropDatabase)
     await rootClient.query(sqlCreateDatabase)
-    await rootClient.query(sqlDropTable)
 
     await dbClient.connect()
     await dbClient.query(sqlCommands.join(process.env.SQL_DELIMITER))
