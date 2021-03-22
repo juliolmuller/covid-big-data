@@ -47,9 +47,9 @@ export function getAllPlaces() {
 export function getAllStates() {
   return `
     SELECT DISTINCT
-        state
-      FROM ${TABLE_NAME}
-      ORDER BY
+      state
+    FROM ${TABLE_NAME}
+    ORDER BY
       state
   `
 }
@@ -58,12 +58,12 @@ export function getAllStates() {
 export function getAllCities(state) {
   return `
     SELECT DISTINCT
-        city
-      FROM ${TABLE_NAME}
-      WHERE
-        state = '${state}'
-      ORDER BY
-        city
+      city
+    FROM ${TABLE_NAME}
+    WHERE
+      state = '${state}'
+    ORDER BY
+      city
   `
 }
 
@@ -71,10 +71,10 @@ export function getAllCities(state) {
 export function getAll(fields = '*') {
   return `
     SELECT
-        ${fields}
-      FROM ${TABLE_NAME}
-      ORDER BY
-        date, state, city
+      ${fields}
+    FROM ${TABLE_NAME}
+    ORDER BY
+      date, state, city
   `
 }
 
@@ -82,12 +82,12 @@ export function getAll(fields = '*') {
 export function getPage(page, limit, fields = '*') {
   return `
     SELECT
-        ${fields}
-      FROM ${TABLE_NAME}
-      ORDER BY
-        date, state, city
-      LIMIT ${limit}
-      OFFSET ${limit * (page - 1)}
+      ${fields}
+    FROM ${TABLE_NAME}
+    ORDER BY
+      date, state, city
+    LIMIT ${limit}
+    OFFSET ${limit * (page - 1)}
   `
 }
 
@@ -95,54 +95,66 @@ export function getPage(page, limit, fields = '*') {
 export function getByDateAndPlace(fields, date, places) {
   const placeFilter = getPlacesClosure(places)
   const closure = placeFilter
-    ? `(${placeFilter}) AND '${date}'`
-    : `'${date}'`
+    ? `(${placeFilter}) AND date = '${date}'`
+    : `date = '${date}'`
 
   return `
     SELECT
-        ${fields}
-      FROM ${TABLE_NAME}
-      WHERE
-        ${closure}
-      ORDER BY
-        date
+      ${fields}
+    FROM ${TABLE_NAME}
+    WHERE
+      ${closure}
+    ORDER BY
+      date
   `
 }
 
-// Total de casos em um período
-export function getByDateRangeAndPlace(fields, startDate, endDate, places) {
+// Agregação de casos/óbitos em uma cidade em um determinado período
+export function getByDateRangeAndPlace(aggregationType, startDate, endDate, places) {
   const placeFilter = getPlacesClosure(places)
   const dateFilter = `date BETWEEN '${startDate}' AND '${endDate}'`
   const closure = placeFilter
-    ? `(${placeFilter}) AND '${dateFilter}'`
-    : `'${dateFilter}'`
+    ? `(${placeFilter}) AND ${dateFilter}`
+    : `${dateFilter}`
 
   return `
     SELECT
-        ${fields}
-      FROM ${TABLE_NAME}
-      WHERE
-        ${closure}
-      GROUP BY
-        city
-      ORDER BY
-        city, date
+      state, city, city_ibge_code,
+      estimated_population_2019,
+      ${aggregationType}(new_confirmed) AS "${aggregationType.toLowerCase()}_confirmed",
+      ${aggregationType}(new_deaths) AS "${aggregationType.toLowerCase()}_deaths"
+    FROM ${TABLE_NAME}
+    WHERE
+      ${closure}
+    GROUP BY
+      state, city, city_ibge_code, estimated_population_2019
+    ORDER BY
+      state, city
   `
 }
 
-// Total de casos em um período
-export function getByPlaceGrouping(fields, places, group) {
+// Percentual acumulado da população afetada em uma cidade (em uma determinada data)
+export function getPercentageByDateRangeAndPlace(places, date) {
   const placeFilter = getPlacesClosure(places)
-  const where = placeFilter ? `WHERE ${placeFilter}` : ''
-  const groupBy = `GROUP BY ${group}`
+  const dateFilter = date ? `date = '${date}'` : 'is_last = TRUE'
+  const closure = placeFilter
+    ? `(${placeFilter}) AND ${dateFilter}`
+    : `${dateFilter}`
 
   return `
     SELECT
-        ${fields}
-      FROM ${TABLE_NAME}
-      ${where}
-      ${groupBy}
-      ORDER BY
-        date, state, city
+      state, city, city_ibge_code,
+      estimated_population_2019,
+      last_available_confirmed AS "total_confirmed",
+      last_available_deaths AS "total_deaths",
+      CONCAT(CAST((CAST(last_available_confirmed AS FLOAT) * 100 / CAST(estimated_population_2019 as float))::DECIMAL(10,3) AS VARCHAR), '%') AS "rate_confirmed",
+      CONCAT(CAST((CAST(last_available_deaths AS FLOAT) * 100 / CAST(estimated_population_2019 as float))::DECIMAL(10,3) AS VARCHAR), '%') AS "rate_deaths"
+    FROM ${TABLE_NAME}
+    WHERE
+      ${closure}
+    GROUP BY
+      state, city, city_ibge_code, estimated_population_2019, last_available_confirmed, last_available_deaths
+    ORDER BY
+      state, city
   `
 }
