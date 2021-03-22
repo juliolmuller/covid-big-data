@@ -1,14 +1,15 @@
 import { getConnection } from '../database/postgres'
 import * as queries from '../database/postgres/queries'
 
-async function displayBenchmark(desc, queryPromise) {
-  const TEXT_LENGTH = 60
-  const { duration } = await queryPromise
-  const alignedDesc = desc.length < TEXT_LENGTH
-    ? desc.concat(' '.repeat(TEXT_LENGTH - desc.length))
-    : desc.slice(0, TEXT_LENGTH)
+async function displayBenchmark(description, queryPromise) {
+  const { rows, duration } = await queryPromise
 
-  console.log(alignedDesc, `${duration}ms`)
+  console.log(
+    ' '.repeat(4),
+    description.padEnd(50),
+    `${rows.length} registro(s)`.padStart(19),
+    `${duration}ms`.padStart(8),
+  )
 }
 
 async function run() {
