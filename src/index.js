@@ -38,48 +38,56 @@ async function execMongoBenchmarks() {
   printEnd('Benchmark do MongoDB finalizado!')
 }
 
-async function runModules() {
+// Exibe as opções de execução do programa
+async function main(defaultChoice) {
+  defaultChoice === undefined && console.log('')
+
+  const choices = [
+    { title: 'Configurar o PostgreSQL e o MongoDB' },
+    { title: 'Configurar somente o PostgreSQL' },
+    { title: 'Configurar somente o MongoDB' },
+    { title: 'Executar benchmark no PostgreSQL' },
+    { title: 'Executar benchmark no MongoDB' },
+    { title: 'Cancelar e sair' },
+  ]
   const { option } = await prompts({
     message: 'O que deseja fazer?',
     type: 'select',
     name: 'option',
-    initial: 0,
-    choices: [
-      { title: 'Configurar o PostgreSQL e o MongoDB' },
-      { title: 'Configurar somente o PostgreSQL' },
-      { title: 'Configurar somente o MongoDB' },
-      { title: 'Executar benchmark no PostgreSQL' },
-      { title: 'Executar benchmark no MongoDB' },
-      { title: 'Cancelar e sair' },
-    ],
+    initial: defaultChoice || 0,
+    choices,
   })
 
   switch (option) {
     case 0:
       await configPostgres()
       await configMongo()
+      main(choices.length - 1)
       break
 
     case 1:
       await configPostgres()
+      main(choices.length - 1)
       break
 
     case 2:
       await configMongo()
+      main(choices.length - 1)
       break
 
     case 3:
       await execPostgresBenchmarks()
+      main(choices.length - 1)
       break
 
     case 4:
       await execMongoBenchmarks()
+      main(choices.length - 1)
       break
 
     default:
       process.exit(0)
   }
-
 }
 
-runModules()
+main() // Chamada à execução do programa principal
