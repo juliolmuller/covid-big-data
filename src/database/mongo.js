@@ -5,9 +5,9 @@ import path from 'path'
 const connection = {
   host: process.env.DB_MONGO_HOST,
   port: process.env.DB_MONGO_PORT,
-  database: process.env.DB_MONGO_DATABASE,
   username: process.env.DB_MONGO_USERNAME,
   password: process.env.DB_MONGO_PASSWORD,
+  database: process.env.DB_MONGO_DATABASE,
   asURL() {
     const credentials = this.username ? `${this.username}:${this.password}@` : ''
 
@@ -17,14 +17,16 @@ const connection = {
 
 export async function loadDataset() {
   const client = new MongoClient(connection.asURL())
-  const datasetFolder = path.resolve(__dirname, '..', '..', 'dataset')
-  const datasetFile = path.resolve(datasetFolder, 'casos-full.csv')
+  const projectRoot = path.resolve(__dirname, '..', '..')
+  const datasetFile = path.resolve(projectRoot, process.env.DATASET_FILE)
   const dataset = await csv().fromFile(datasetFile)
 
   try {
     await client.connect()
     await client.db().dropDatabase()
-    await client.db().collection('covid_cases').insertMany(dataset)
+    await client.db()
+      .collection(process.env.DB_MONGO_COLL1)
+      .insertMany(dataset)
   } catch (error) {
     console.error(error)
   } finally {
