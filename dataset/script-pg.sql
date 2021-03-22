@@ -1,7 +1,7 @@
 
-DROP DATABASE IF EXISTS big_data;
+DROP DATABASE IF EXISTS <DB_PG_DATABASE>;
 
-CREATE DATABASE big_data WITH
+CREATE DATABASE <DB_PG_DATABASE> WITH
   OWNER = postgres
   ENCODING = 'UTF8'
   LC_COLLATE = 'English_United States.1252'
@@ -9,7 +9,7 @@ CREATE DATABASE big_data WITH
   TABLESPACE = pg_default
   CONNECTION LIMIT = -1;
 
-CREATE TABLE covid_cases(
+CREATE TABLE <DB_PG_TABLE>(
   city VARCHAR,
   city_ibge_code INTEGER,
   date DATE,
@@ -30,7 +30,7 @@ CREATE TABLE covid_cases(
   new_deaths INTEGER
 );
 
-COPY covid_cases(
+COPY <DB_PG_TABLE>(
   city,
   city_ibge_code,
   date,
@@ -49,7 +49,7 @@ COPY covid_cases(
   state,
   new_confirmed,
   new_deaths
-) FROM 'C:\path\to\project\dataset\casos-full.csv'
+) FROM '<absolute path to DATASET_FILE>'
   DELIMITER ','
   CSV HEADER;
 
