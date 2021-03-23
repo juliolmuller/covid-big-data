@@ -19,7 +19,13 @@ export async function loadDataset() {
   const client = new MongoClient(connection.asURL(), { useUnifiedTopology: true })
   const projectRoot = path.resolve(__dirname, '..', '..')
   const datasetFile = path.resolve(projectRoot, process.env.DATASET_FILE)
-  const dataset = await csv().fromFile(datasetFile)
+  const dataset = await csv({
+    checkType: true,
+    colParser: {
+      last_available_date: (data) => new Date(data),
+      date: (data) => new Date(data),
+    },
+  }).fromFile(datasetFile)
 
   try {
     await client.connect()
