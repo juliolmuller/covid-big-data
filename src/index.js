@@ -40,7 +40,7 @@ async function execMongoBenchmarks() {
 
 // Exibe as opções de execução do programa
 async function main(defaultChoice) {
-  defaultChoice === undefined && console.log('')
+  defaultChoice !== undefined && console.log('')
 
   const choices = [
     { title: 'Configurar o PostgreSQL e o MongoDB' },
@@ -48,10 +48,9 @@ async function main(defaultChoice) {
     { title: 'Configurar somente o MongoDB' },
     { title: 'Executar benchmark no PostgreSQL' },
     { title: 'Executar benchmark no MongoDB' },
-    { title: 'Cancelar e sair' },
   ]
   const { option } = await prompts({
-    message: 'O que deseja fazer?',
+    message: 'O que deseja fazer? (tecle ESC para cancelar e sair)',
     type: 'select',
     name: 'option',
     initial: defaultChoice || 0,
@@ -62,27 +61,27 @@ async function main(defaultChoice) {
     case 0:
       await configPostgres()
       await configMongo()
-      main(choices.length - 1)
+      main(0)
       break
 
     case 1:
       await configPostgres()
-      main(choices.length - 1)
+      main(1)
       break
 
     case 2:
       await configMongo()
-      main(choices.length - 1)
+      main(2)
       break
 
     case 3:
       await execPostgresBenchmarks()
-      main(choices.length - 1)
+      main(3)
       break
 
     case 4:
       await execMongoBenchmarks()
-      main(choices.length - 1)
+      main(4)
       break
 
     default:
