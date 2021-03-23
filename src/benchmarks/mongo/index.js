@@ -35,7 +35,7 @@ async function runBenchmarks() {
     await displayBenchmark('Buscar lista de cidades do Paraná', queries.getAllCities(collection, 'PR'))
     await displayBenchmark('Buscar lista de cidades do Rio de Janeiro', queries.getAllCities(collection, 'RJ'))
     await displayBenchmark('Buscar lista de cidades de São Paulo', queries.getAllCities(collection, 'SP'))
-    // await displayBenchmark('Buscar todos os registros', queries.getAll(collection)) // TODO: uncomment
+    await displayBenchmark('Buscar todos os registros', queries.getAll(collection))
     await displayBenchmark('Buscar página 1 de tudo com 50 registros', queries.getPage(collection, 1, 50))
     await displayBenchmark('Buscar página 100 de tudo com 50 registros', queries.getPage(collection, 100, 50))
     await displayBenchmark('Buscar página 1000 de tudo com 50 registros', queries.getPage(collection, 1000, 50))
