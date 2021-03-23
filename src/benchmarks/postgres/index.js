@@ -11,7 +11,7 @@ async function displayBenchmark(description, queryPromise) {
 
     console.log('   ',
       description.padEnd(DESCRIPTION_LENGTH),
-      `${rows.length} registro${rows.length === 1 ? 's' : ' '}`.padStart(COUNT_LENGTH),
+      `${rows.length} registro${rows.length === 1 ? ' ' : 's'}`.padStart(COUNT_LENGTH),
       `${duration}ms`.padStart(DURATION_LENGTH))
   } catch (error) {
     console.error(error)
