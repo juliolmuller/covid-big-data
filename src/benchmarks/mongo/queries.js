@@ -67,12 +67,12 @@ export function getAllCities(collection, state) {
   ]))
 }
 
-// Recupera todos os registros do banco, sem filtros
+// Recupera todos os documentos do banco, sem filtros
 export function getAll(collection, fields = {}) {
   return queryRunner(collection.find({}, fields))
 }
 
-// Recupera parte dos registros do banco, sem filtros, por paginação
+// Recupera parte dos documentos do banco, sem filtros, por paginação
 export function getPage(collection, page, limit, fields = {}) {
   return queryRunner(collection
     .find({}, fields)

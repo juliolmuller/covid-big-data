@@ -1,6 +1,7 @@
 import { getConnection } from '../../database/postgres'
 import * as queries from './queries'
 
+// Executar operação e apresentar resultado na tela
 async function displayBenchmark(description, queryPromise) {
   const DESCRIPTION_LENGTH = 60
   const COUNT_LENGTH = 17
@@ -18,6 +19,7 @@ async function displayBenchmark(description, queryPromise) {
   }
 }
 
+// Criar conexão com banco e executar todas
 async function runBenchmarks() {
   const client = await getConnection()
 

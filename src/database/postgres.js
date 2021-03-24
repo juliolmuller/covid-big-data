@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import path from 'path'
 import { Client } from 'pg'
 
+// Dados para conexão com o banco
 const connection = {
   host: process.env.DB_PG_HOST,
   port: process.env.DB_PG_PORT,
@@ -10,6 +11,7 @@ const connection = {
   database: process.env.DB_PG_DATABASE,
 }
 
+// Executa os scripts do arquivo "/dataset/script-pg.sql", que recria os esquemas e insere os dados do CSV
 export async function loadDataset() {
   const { database, ...rootConnection } = connection
   const rootClient = new Client(rootConnection)
@@ -39,6 +41,7 @@ export async function loadDataset() {
   }
 }
 
+// Retorna uma conexão com o banco de dados PostgreSQL
 export async function getConnection() {
   const client = new Client(connection)
 

@@ -2,6 +2,7 @@ import { MongoClient } from 'mongodb'
 import csv from 'csvtojson'
 import path from 'path'
 
+// Dados para conexão com o banco
 const connection = {
   host: process.env.DB_MONGO_HOST,
   port: process.env.DB_MONGO_PORT,
@@ -15,6 +16,7 @@ const connection = {
   },
 }
 
+// Destrói o banco e a coleção existente e recria-los, inserindo os dados do arquivo CSV
 export async function loadDataset() {
   const client = new MongoClient(connection.asURL(), { useUnifiedTopology: true })
   const projectRoot = path.resolve(__dirname, '..', '..')
@@ -42,6 +44,7 @@ export async function loadDataset() {
   }
 }
 
+// Retorna uma conexão com o banco de dados MongoDB
 export async function getConnection() {
   const client = new MongoClient(connection.asURL(), { useUnifiedTopology: true })
 

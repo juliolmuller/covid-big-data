@@ -34,12 +34,12 @@ function getPlacesClosure(places) {
 export function getAllPlaces() {
   return `
     SELECT DISTINCT
-        state, city
-      FROM ${TABLE_NAME}
-      WHERE
-        state IS NOT NULL
-      ORDER BY
-        state, city
+      state, city
+    FROM ${TABLE_NAME}
+    WHERE
+      state IS NOT NULL
+    ORDER BY
+      state, city
   `
 }
 
@@ -78,7 +78,7 @@ export function getAll(fields = '*') {
   `
 }
 
-// Recuperar registros paginados
+// Recuperar registros com paginação
 export function getPage(page, limit, fields = '*') {
   return `
     SELECT
@@ -147,8 +147,8 @@ export function getPercentageByDateRangeAndPlace(places, date) {
       estimated_population_2019,
       last_available_confirmed AS "total_confirmed",
       last_available_deaths AS "total_deaths",
-      CONCAT(CAST((CAST(last_available_confirmed AS FLOAT) * 100 / CAST(estimated_population_2019 as float))::DECIMAL(10,3) AS VARCHAR), '%') AS "rate_confirmed",
-      CONCAT(CAST((CAST(last_available_deaths AS FLOAT) * 100 / CAST(estimated_population_2019 as float))::DECIMAL(10,3) AS VARCHAR), '%') AS "rate_deaths"
+      CONCAT(CAST((CAST(last_available_confirmed AS FLOAT) * 100 / CAST(estimated_population_2019 AS FLOAT))::DECIMAL(10,3) AS VARCHAR), '%') AS "rate_confirmed",
+      CONCAT(CAST((CAST(last_available_deaths AS FLOAT) * 100 / CAST(estimated_population_2019 AS FLOAT))::DECIMAL(10,3) AS VARCHAR), '%') AS "rate_deaths"
     FROM ${TABLE_NAME}
     WHERE
       ${closure}
