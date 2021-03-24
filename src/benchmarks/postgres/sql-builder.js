@@ -38,8 +38,6 @@ export function getAllPlaces() {
     FROM ${TABLE_NAME}
     WHERE
       state IS NOT NULL
-    ORDER BY
-      state, city
   `
 }
 
@@ -49,8 +47,6 @@ export function getAllStates() {
     SELECT DISTINCT
       state
     FROM ${TABLE_NAME}
-    ORDER BY
-      state
   `
 }
 
@@ -62,8 +58,6 @@ export function getAllCities(state) {
     FROM ${TABLE_NAME}
     WHERE
       state = '${state}'
-    ORDER BY
-      city
   `
 }
 
@@ -73,8 +67,6 @@ export function getAll(fields = '*') {
     SELECT
       ${fields}
     FROM ${TABLE_NAME}
-    ORDER BY
-      date, state, city
   `
 }
 
@@ -84,8 +76,6 @@ export function getPage(page, limit, fields = '*') {
     SELECT
       ${fields}
     FROM ${TABLE_NAME}
-    ORDER BY
-      date, state, city
     LIMIT ${limit}
     OFFSET ${limit * (page - 1)}
   `
@@ -104,8 +94,6 @@ export function getByDateAndPlace(fields, date, places) {
     FROM ${TABLE_NAME}
     WHERE
       ${closure}
-    ORDER BY
-      date
   `
 }
 
@@ -128,8 +116,6 @@ export function getByDateRangeAndPlace(aggregationType, startDate, endDate, plac
       ${closure}
     GROUP BY
       state, city, city_ibge_code, estimated_population_2019
-    ORDER BY
-      state, city
   `
 }
 
@@ -154,7 +140,5 @@ export function getPercentageByDateRangeAndPlace(places, date) {
       ${closure}
     GROUP BY
       state, city, city_ibge_code, estimated_population_2019, last_available_confirmed, last_available_deaths
-    ORDER BY
-      state, city
   `
 }
